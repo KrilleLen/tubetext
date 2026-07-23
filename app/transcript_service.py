@@ -116,11 +116,11 @@ class TranscriptService:
                 )
             }
         )
-        if self.settings.proxy_url:
-            session.proxies.update({"http": self.settings.proxy_url, "https": self.settings.proxy_url})
-
         try:
-            api = YouTubeTranscriptApi(http_client=session)
+            api = YouTubeTranscriptApi(
+                http_client=session,
+                proxy_config=self._build_proxy_config(),
+            )
             transcript_list = api.list(video_id)
             tracks = list(transcript_list)
             if not tracks:
@@ -189,6 +189,27 @@ class TranscriptService:
             raise self._map_library_error(exc) from exc
         finally:
             session.close()
+
+    def _build_proxy_config(self) -> Any | None:
+        if self.settings.webshare_proxy_username and self.settings.webshare_proxy_password:
+            from youtube_transcript_api.proxies import WebshareProxyConfig
+
+            countries = list(self.settings.webshare_proxy_countries) or None
+            return WebshareProxyConfig(
+                proxy_username=self.settings.webshare_proxy_username,
+                proxy_password=self.settings.webshare_proxy_password,
+                filter_ip_locations=countries,
+            )
+
+        if self.settings.proxy_url:
+            from youtube_transcript_api.proxies import GenericProxyConfig
+
+            return GenericProxyConfig(
+                http_url=self.settings.proxy_url,
+                https_url=self.settings.proxy_url,
+            )
+
+        return None
 
     @staticmethod
     def _select_track(
@@ -265,7 +286,7 @@ class TranscriptService:
                 503,
             ),
             "IpBlocked": (
-                "YouTube har blockerat serverns IP-adress. Lägg till YOUTUBE_PROXY_URL.",
+                "YouTube har blockerat serverns IP-adress. Lägg in Webshare-uppgifterna i Render.",
                 "youtube_ip_blocked",
                 503,
             ),
