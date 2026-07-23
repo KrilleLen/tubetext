@@ -1,5 +1,7 @@
 # TubeText
 
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https%3A%2F%2Fgithub.com%2FKrilleLen%2Ftubetext)
+
 En produktionstät, mobilvänlig webbapp som hämtar offentlig YouTube-textning och gör den lätt att söka, kopiera, exportera och bädda in på en annan hemsida.
 
 ## Funktioner

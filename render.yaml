@@ -2,7 +2,7 @@ services:
   - type: web
     name: tubetext
     runtime: docker
-    plan: starter
+    plan: free
     healthCheckPath: /api/health
     autoDeploy: true
     envVars:
