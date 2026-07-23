@@ -39,12 +39,23 @@ class Settings:
         _csv(os.getenv("EMBED_ALLOWED_ORIGINS"), "http://localhost:8000")
     )
     proxy_url: str | None = os.getenv("YOUTUBE_PROXY_URL") or None
+    webshare_proxy_username: str | None = os.getenv("WEBSHARE_PROXY_USERNAME") or None
+    webshare_proxy_password: str | None = os.getenv("WEBSHARE_PROXY_PASSWORD") or None
+    webshare_proxy_countries: tuple[str, ...] = _csv(os.getenv("WEBSHARE_PROXY_COUNTRIES"), "se,de")
     request_timeout_seconds: float = float(os.getenv("REQUEST_TIMEOUT_SECONDS", "12"))
     cache_ttl_seconds: int = int(os.getenv("CACHE_TTL_SECONDS", "1800"))
     cache_max_items: int = int(os.getenv("CACHE_MAX_ITEMS", "200"))
     rate_limit_requests: int = int(os.getenv("RATE_LIMIT_REQUESTS", "20"))
     rate_limit_window_seconds: int = int(os.getenv("RATE_LIMIT_WINDOW_SECONDS", "60"))
     docs_enabled: bool = _as_bool(os.getenv("DOCS_ENABLED"), default=True)
+
+    @property
+    def proxy_mode(self) -> str:
+        if self.webshare_proxy_username and self.webshare_proxy_password:
+            return "webshare"
+        if self.proxy_url:
+            return "generic"
+        return "none"
 
     @property
     def frame_ancestors(self) -> str:
