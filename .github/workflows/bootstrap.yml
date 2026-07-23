@@ -1,0 +1,28 @@
+name: Install TubeText source
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  install:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install complete project
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f READY || exit 0
+          cat project.part* | base64 --decode > /tmp/tubetext.zip
+          unzip -oq /tmp/tubetext.zip -d .
+          rm -f READY project.part* .github/workflows/bootstrap.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Publish production-ready TubeText app"
+          git push
