@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: tubetext
+    runtime: docker
+    plan: starter
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: ENVIRONMENT
+        value: production
+      - key: DOCS_ENABLED
+        value: "false"
+      - key: ALLOWED_ORIGINS
+        sync: false
+      - key: EMBED_ALLOWED_ORIGINS
+        sync: false
+      - key: YOUTUBE_PROXY_URL
+        sync: false

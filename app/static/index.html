@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Hämta, sök och exportera textning från offentliga YouTube-videor.">
+  <title>TubeText – YouTube till text</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <div class="ambient ambient-one"></div>
+  <div class="ambient ambient-two"></div>
+
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="TubeText startsida">
+      <span class="brand-mark">T</span>
+      <span>TubeText</span>
+    </a>
+    <span class="status"><span class="status-dot"></span> Ingen inloggning</span>
+  </header>
+
+  <main>
+    <section class="hero">
+      <p class="eyebrow">YOUTUBE → TEXT</p>
+      <h1>Hämta hela transkriptionen på några sekunder.</h1>
+      <p class="lead">Klistra in en YouTube-länk. Sök i texten, hoppa till rätt ögonblick och exportera som TXT, SRT eller VTT.</p>
+
+      <form id="transcript-form" class="generator" novalidate>
+        <div class="url-row">
+          <label class="sr-only" for="youtube-url">YouTube-länk</label>
+          <input id="youtube-url" name="url" type="url" inputmode="url" autocomplete="url" placeholder="https://www.youtube.com/watch?v=..." required>
+          <button id="generate-button" type="submit">
+            <span class="button-label">Hämta text</span>
+            <span class="spinner" aria-hidden="true"></span>
+          </button>
+        </div>
+        <div class="options-row">
+          <label>
+            Föredraget språk
+            <select id="preferred-language">
+              <option value="sv,en">Svenska, sedan engelska</option>
+              <option value="en,sv">Engelska, sedan svenska</option>
+              <option value="de,en">Tyska, sedan engelska</option>
+              <option value="fr,en">Franska, sedan engelska</option>
+              <option value="es,en">Spanska, sedan engelska</option>
+              <option value="auto">Automatiskt</option>
+            </select>
+          </label>
+          <span class="privacy-note">Videon laddas inte ner av webbläsaren.</span>
+        </div>
+      </form>
+
+      <div id="history" class="history" hidden>
+        <span>Senaste:</span>
+        <div id="history-items" class="history-items"></div>
+      </div>
+    </section>
+
+    <section id="message" class="message" role="status" aria-live="polite" hidden></section>
+
+    <section id="result" class="result-grid" hidden>
+      <aside class="video-card">
+        <div class="player-wrap">
+          <iframe id="player" title="YouTube-video" src="about:blank" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        </div>
+        <div class="video-meta">
+          <p id="video-author" class="video-author"></p>
+          <h2 id="video-title">YouTube-video</h2>
+          <div class="meta-pills">
+            <span id="language-pill"></span>
+            <span id="segment-count"></span>
+            <span id="cache-pill" hidden>Cache</span>
+          </div>
+        </div>
+      </aside>
+
+      <section class="transcript-card">
+        <div class="toolbar">
+          <div class="search-wrap">
+            <label class="sr-only" for="transcript-search">Sök i transkriptionen</label>
+            <input id="transcript-search" type="search" placeholder="Sök i transkriptionen...">
+          </div>
+          <div class="toolbar-actions">
+            <label class="language-select-wrap" for="track-language">
+              <span class="sr-only">Välj textningsspråk</span>
+              <select id="track-language" title="Välj textningsspråk"></select>
+            </label>
+            <button id="copy-button" class="secondary" type="button">Kopiera</button>
+            <div class="download-menu">
+              <button id="download-button" class="secondary" type="button" aria-expanded="false">Ladda ner</button>
+              <div id="download-options" class="download-options" hidden>
+                <button type="button" data-format="txt">TXT</button>
+                <button type="button" data-format="srt">SRT</button>
+                <button type="button" data-format="vtt">VTT</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="transcript-settings">
+          <label class="toggle">
+            <input id="timestamps-toggle" type="checkbox" checked>
+            <span>Visa tidsstämplar</span>
+          </label>
+          <span id="search-count"></span>
+        </div>
+
+        <div id="segments" class="segments" tabindex="0"></div>
+      </section>
+    </section>
+  </main>
+
+  <footer>
+    Fungerar för offentliga videor där textning finns tillgänglig. Respektera upphovsrätt och YouTubes villkor.
+  </footer>
+
+  <script src="/static/app.js" defer></script>
+</body>
+</html>
